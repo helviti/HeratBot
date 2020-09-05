@@ -102,3 +102,12 @@ dist
 
 # TernJS port file
 .tern-port
+
+launch.json
+
+ffmpeg.exe
+
+# Audio folder and content
+/audio
+/audio/*
+runner.sh

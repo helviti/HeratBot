@@ -1,0 +1,7 @@
+{
+    "botChannelId": "432453383270563850",
+    "audioFolder": "./audio/",
+    "dataFile": "./data.json",
+    "timeFormat": "YY/MM/DD-HH:mm:ss",
+    "audioGitRepo": "github.com/atesbalci/HeratBot-audio.git"
+}
