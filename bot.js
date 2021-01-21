@@ -109,9 +109,14 @@ async function TEXT(msg) {
     let match;
 
     // Play clip if message matches a file
-    if (clipList.some((clip) => clip.name === msg.content)) {
-      deleteMessage(msg);
-      await play(msg, msg.content);
+    if ((match = msg.content.match(/([^ ]*)( [0-9]+\.?[0-9]*)?/))) {
+      if (clipList.some((clip) => clip.name === match[1])) {
+        deleteMessage(msg);
+        if (match[2])
+          await play(msg, match[1], parseFloat(match[2]));
+        else
+          await play(msg, match[1]);
+      }
     }
 
     // Play random sound clip
@@ -212,10 +217,10 @@ async function TEXT(msg) {
   }
 }
 
-async function play(msg, clip) {
+async function play(msg, clip, volume = 1) {
   if (msg.member.voice.channel) {
     const connection = await msg.member.voice.channel.join();
-    connection.play(`${audioFolder + clip}.mp3`);
+    connection.play(`${audioFolder + clip}.mp3`, { volume: volume });
     log(msg);
   }
   // Send stat for clip playing
