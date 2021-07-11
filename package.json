@@ -13,6 +13,7 @@
   "dependencies": {
     "@discordjs/opus": "^0.1.0",
     "death": "^1.1.0",
+    "discord-buttons": "^4.0.0",
     "discord.js": "^12.1.1",
     "esm": "^3.2.25",
     "ffmpeg": "0.0.4",

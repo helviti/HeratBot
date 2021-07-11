@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const disbut = require("discord-buttons");
 const fs = require('fs');
 const { audioFolder } = require('./config.json');
 const {
@@ -113,9 +114,9 @@ async function TEXT(msg) {
       if (clipList.some((clip) => clip.name === match[1])) {
         deleteMessage(msg);
         if (match[2])
-          await play(msg, match[1], parseFloat(match[2]));
+          await play(msg.member.voice, match[1], parseFloat(match[2]));
         else
-          await play(msg, match[1]);
+          await play(msg.member.voice, match[1]);
       }
     }
 
@@ -157,12 +158,7 @@ async function TEXT(msg) {
       const tag = match[1];
       if (tag in tagMap) {
         deleteMessage(msg);
-        const clips = tagMap[tag];
-        let reply = `Clips for ${tag} are: `
-        for (let i = 0; i < clips.length; i++) {
-          reply += clips[i] + ((i < clips.length - 1) ? ', ' : '');
-        }
-        msg.reply(reply);
+        sendButtonRows(tagMap[tag], `Clips for ${tag} are:`, msg.channel);
       }
     }
 
@@ -173,7 +169,7 @@ async function TEXT(msg) {
 
         // Send list of sound clips
         if (helpWord.startsWith('c')) {
-          printList(msg);
+          printList(msg.channel);
         }
 
         // Send a list of all tags
@@ -188,7 +184,7 @@ async function TEXT(msg) {
 
       // Prints the help message
       else {
-        msg.reply(
+        msg.channel.send(
 `Available public commands are:
 '-h c': Lists all clips.
 '-h t': Lists all tags.
@@ -198,7 +194,8 @@ async function TEXT(msg) {
 '-d <clip>': Shows the set description for the specified clip.
 '-t clip <clip>': Lists the tags set for the specified clip.
 '-t tag <tag>': Lists the clips within specified tag.
-'-p <clip beginning>': Basically auto complete (supports lowercase).`);
+'-p <clip beginning>': Basically auto complete (supports lowercase).
+'-s <keyword>: Seatches for clips beginning with the given keyword.`);
       }
     }
 
@@ -207,24 +204,26 @@ async function TEXT(msg) {
       clipList.forEach(async clip => {
         if (clip.name.startsWith(clipPart)) {
           deleteMessage(msg);
-          await play(msg, clip.name);
+          await play(msg.member.voice, clip.name);
           return;
         }
       });
+    }
+
+    if ((match = msg.content.match(/^-s (\w+)/)) != null) {
+      const keyword = match[1].toUpperCase();
+      searchAndSendResults(keyword, msg.channel);
     }
   } catch (err) {
     console.log(err);
   }
 }
 
-async function play(msg, clip, volume = 1) {
-  if (msg.member.voice.channel) {
-    const connection = await msg.member.voice.channel.join();
+async function play(voice, clip, volume = 1) {
+  if (voice && voice.channel) {
+    const connection = await voice.channel.join();
     connection.play(`${audioFolder + clip}.mp3`, { volume: volume });
-    log(msg);
   }
-  // Send stat for clip playing
-  clipPlayed(msg.author.id, clip);
 }
 
 async function playAndReplyRandom(msg, tag = '') {
@@ -289,6 +288,39 @@ function printList(msg) {
   }
 }
 
+function searchAndSendResults(keyword, channel) {
+  let results = [];
+  clipList.forEach(item => {
+    if (item.name.startsWith(keyword)) {
+      results.push(item.name);
+    }
+  });
+
+  if (results.length > 0) {
+    sendButtonRows(results, `Clips starting with '${keyword}':`, channel);
+  }
+}
+
+function sendButtonRows(clipNames, prefixText, channel) {
+  let rows = [];
+  let row;
+  for (let i = 0; i < clipNames.length; i++) {
+    const name = clipNames[i];
+    if (i % 5 == 0) {
+      row = new disbut.MessageActionRow();
+      rows.push(row);
+    }
+
+    row.addComponent(new disbut.MessageButton().setStyle('blurple').setLabel(name).setID(`c_${name}`));
+  }
+  
+  channel.send(prefixText);
+  for (let i = 0; i < rows.length; i++) {
+    row = rows[i];
+    channel.send(`Clips (${i}):`, row);
+  }
+}
+
 function printTags(msg) {
   let page = 0;
   let reply = "";
@@ -339,6 +371,7 @@ module.exports.startBot = function startBot(token) {
   initializeRepo().then(() =>{
     generateClipObjects();
     const client = new Discord.Client();
+    disbut(client);
   
     consWrite();
   
@@ -353,6 +386,13 @@ module.exports.startBot = function startBot(token) {
   
     process.on('unhandledRejection', (error) => {
       console.error(`${getTime()}: Unhandled promise rejection:`, error);
+    });
+
+    client.on('clickButton', async (button) => {
+      if (button.id.startsWith('c_')) {
+        await play(button.clicker.member.voice, button.id.substr(2));
+        button.reply.defer();
+      }
     });
   
     client.login(token);
