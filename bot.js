@@ -317,7 +317,7 @@ function sendButtonRows(clipNames, prefixText, channel) {
   channel.send(prefixText);
   for (let i = 0; i < rows.length; i++) {
     row = rows[i];
-    channel.send(`Clips (${i}):`, row);
+    channel.send(`Clips (${(i + 1)}):`, row);
   }
 }
 
