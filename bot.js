@@ -169,7 +169,7 @@ async function TEXT(msg) {
 
         // Send list of sound clips
         if (helpWord.startsWith('c')) {
-          printList(msg.channel);
+          printList(msg);
         }
 
         // Send a list of all tags
