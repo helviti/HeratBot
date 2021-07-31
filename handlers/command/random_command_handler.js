@@ -1,5 +1,5 @@
-const { tagMap } = require("../../analytics")
-const { getPagedList, multiReply, playClip } = require("../common")
+const { tagMap, clipList } = require("../../analytics")
+const { playClip } = require("../common")
 
 module.exports.RandomCommandHandler = class {
   constructor() {
