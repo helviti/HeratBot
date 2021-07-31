@@ -1,6 +1,5 @@
 const { Client, Intents } = require("discord.js");
 const { generateClipObjects } = require("./analytics");
-const { initializeRepo, autoCommitAndPushChanges } = require("./lib/audio_git_util");
 const consWrite = require('./console.js');
 const { getTime } = require("./lib/util");
 const { HelpCommandHandler } = require("./handlers/command/help_command_handler");
@@ -16,8 +15,7 @@ const { handleDirectMessage } = require("./handlers/message/direct_message_handl
 
 let commandHandlers;
 
-module.exports.startBot = async function startBot(token) {
-  await initializeRepo();
+module.exports.startBot = function startBot(token) {
   generateClipObjects();
   const client = new Client({ 
     intents: [
@@ -57,7 +55,6 @@ module.exports.startBot = async function startBot(token) {
   });
 
   client.login(token);
-  autoCommitAndPushChanges();
 }
 
 function populateAndHandleCommands(commands) {

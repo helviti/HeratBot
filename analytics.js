@@ -3,7 +3,6 @@ const fs = require('fs');
 const { audioFolder } = require('./config.json');
 const { getTime } = require('./lib/util.js');
 const { isFunction } = require('util');
-const { addFiles } = require('./lib/audio_git_util');
 
 class Clip {
   constructor(name, by, on, tags = []) {
