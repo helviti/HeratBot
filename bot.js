@@ -13,6 +13,8 @@ const { AddTagCommandHandler } = require("./handlers/command/addtag_command_hand
 const { RemoveTagCommandHandler } = require("./handlers/command/removetag_command_handler");
 const { handleDirectMessage } = require("./handlers/message/direct_message_handler");
 const { RandomCommandHandler } = require("./handlers/command/random_command_handler");
+const { RecentCommandHandler } = require("./handlers/command/recent_command_handler");
+const { FrequentCommandHandler } = require("./handlers/command/frequent_command_handler");
 
 let commandHandlers;
 
@@ -67,7 +69,9 @@ function populateAndHandleCommands(commands) {
     new SearchCommandHandler(),
     new AddTagCommandHandler(),
     new RemoveTagCommandHandler(),
-    new RandomCommandHandler()
+    new RandomCommandHandler(),
+    new RecentCommandHandler(),
+    new FrequentCommandHandler()
   ];
 
   commandHandlers = {};

@@ -1,5 +1,6 @@
 const {	joinVoiceChannel, entersState, VoiceConnectionStatus, createAudioPlayer, createAudioResource, AudioPlayerStatus } = require('@discordjs/voice');
 const { MessageActionRow, MessageButton } = require('discord.js');
+const { markAsPlayed } = require('../analytics');
 const { audioFolder } = require('../config.json');
 
 const player = createAudioPlayer();
@@ -26,7 +27,7 @@ module.exports.getPagedList = function getPagedList(prefix, elements) {
   return retVal;
 }
 
-module.exports.playClip = async function playClip(voice, clip, volume = 1) {
+module.exports.playClip = async function playClip(voice, clip, volume = 1, doMarkPlayed = true) {
   if (voice && voice.channel) {
     const connection = await connectToChannel(voice.channel);
     const audioSource = createAudioResource(`${audioFolder + clip}.mp3`, {inlineVolume: true});
@@ -34,6 +35,7 @@ module.exports.playClip = async function playClip(voice, clip, volume = 1) {
     player.play(audioSource);
     await entersState(player, AudioPlayerStatus.Playing, 5e3);
     connection.subscribe(player);
+    if (doMarkPlayed) markAsPlayed(clip);
   }
 }
 

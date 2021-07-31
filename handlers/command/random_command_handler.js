@@ -26,7 +26,7 @@ module.exports.RandomCommandHandler = class {
   async handleCommand(interaction) {
     const tag = interaction.options.getString('tag');
     const clip = getRandom(tag ? tag : '');
-    await playClip(interaction.member.voice, clip);
+    await playClip(interaction.member.voice, clip, 1, false);
     if (tag) {
       await interaction.reply(`You rolled '${clip}' of tag '${tag}'`);
     }

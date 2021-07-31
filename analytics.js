@@ -2,30 +2,21 @@
 const fs = require('fs');
 const { audioFolder } = require('./config.json');
 const { getTime } = require('./lib/util.js');
-const { isFunction } = require('util');
 
 class Clip {
-  constructor(name, by, on, tags = []) {
+  constructor(name, playCount = 0, lastPlayDate = null) {
     this.name = name;
-    this.by = by;
-    this.on = on;
-    this.tags = tags;
-    this.stats = [];
-  }
-}
-
-class User {
-  constructor(id) {
-    this.id = id;
-    this.on = [];
-    this.on.push(getTime());
+    this.playCount = playCount;
+    this.lastPlayDate = lastPlayDate;
   }
 }
 
 class ClipMeta {
-  constructor(desc = '', tags = []) {
+  constructor(desc = '', tags = [], playCount = 0) {
     this.desc = desc;
     this.tags = tags;
+    this.playCount = playCount;
+    this.lastPlayDate = null;
   }
 }
 
@@ -58,8 +49,10 @@ function getMeta(clipName) {
   let meta = new ClipMeta();
   if (fs.existsSync(metaFile)) {
     let metaRaw = JSON.parse(fs.readFileSync(metaFile));
-    if('desc' in metaRaw) meta.desc = metaRaw.desc;
-    if('tags' in metaRaw) meta.tags = metaRaw.tags;
+    if ('desc' in metaRaw) meta.desc = metaRaw.desc;
+    if ('tags' in metaRaw) meta.tags = metaRaw.tags;
+    if ('playCount' in metaRaw) meta.playCount = metaRaw.playCount;
+    if ('lastPlayDate' in metaRaw) meta.lastPlayDate = Date.parse(metaRaw.lastPlayDate);
   }
 
   return meta;
@@ -81,8 +74,9 @@ module.exports.generateClipObjects = function generateClipObjects() {
     if (match != null) {
       const clipName = match[1];
       if (clipList.length < 1 || fileNotExist(clipList, clipName)) {
-        clipList.push(new Clip(clipName, '', getTime()));
-        let tags = getMeta(clipName).tags;
+        const meta = getMeta(clipName);
+        clipList.push(new Clip(clipName, meta.playCount, meta.lastPlayDate));
+        const tags = meta.tags;
         tags.forEach(tag => {
           if (!(tag in tagMap)) {
             tagMap[tag] = [];
@@ -99,7 +93,7 @@ module.exports.generateClipObjects = function generateClipObjects() {
 module.exports.addClip = function addClip(name, by, meta, tags) {
   // Check if clip name exists, if so dont save to file and output an error
   if (fileNotExist(clipList, name)) {
-    clipList.push(new Clip(name, by, getTime(), tags));
+    clipList.push(new Clip(name));
     saveMeta(name, meta);
   } else {
     console.log('error adding clip');
@@ -172,5 +166,17 @@ module.exports.renameTag = function renameTag(oldName, newName) {
       addTagToClip(clip, newName);
     });
     delete tagMap[oldName];
+  }
+}
+
+module.exports.markAsPlayed = function(clipName) {
+  const clip = clipList.find(value => value.name === clipName);
+  if (clip) {
+    clip.playCount++;
+    clip.lastPlayDate = new Date();
+    const meta = getMeta(clipName);
+    meta.playCount = clip.playCount;
+    meta.lastPlayDate = clip.lastPlayDate;
+    saveMeta(clipName, meta);
   }
 }
