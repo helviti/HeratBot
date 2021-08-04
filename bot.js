@@ -15,11 +15,14 @@ const { handleDirectMessage } = require("./handlers/message/direct_message_handl
 const { RandomCommandHandler } = require("./handlers/command/random_command_handler");
 const { RecentCommandHandler } = require("./handlers/command/recent_command_handler");
 const { FrequentCommandHandler } = require("./handlers/command/frequent_command_handler");
+const { initializeAndRunIntros, memberJoined } = require("./lib/intros");
+const { SetIntroCommandHandler } = require("./handlers/command/set_intro_command_handle");
 
 let commandHandlers;
 
 module.exports.startBot = function startBot(token) {
   generateClipObjects();
+  initializeAndRunIntros();
   const client = new Client({ 
     intents: [
       Intents.FLAGS.GUILDS,
@@ -57,6 +60,12 @@ module.exports.startBot = function startBot(token) {
     }
   });
 
+  client.on('voiceStateUpdate', (oldState, newState) => {
+    if (!oldState.channel && newState.channel) {
+      memberJoined(newState.member);
+    }
+  });
+
   client.login(token);
 }
 
@@ -71,7 +80,8 @@ function populateAndHandleCommands(commands) {
     new RemoveTagCommandHandler(),
     new RandomCommandHandler(),
     new RecentCommandHandler(),
-    new FrequentCommandHandler()
+    new FrequentCommandHandler(),
+    new SetIntroCommandHandler()
   ];
 
   commandHandlers = {};

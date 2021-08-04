@@ -3,5 +3,5 @@
     "audioFolder": "./audio/",
     "dataFile": "./data.json",
     "timeFormat": "YY/MM/DD-HH:mm:ss",
-    "audioGitRepo": "github.com/atesbalci/HeratBot-audio.git"
+    "introsFile": "./audio/intros.json"
 }
