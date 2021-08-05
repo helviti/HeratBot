@@ -1,9 +1,10 @@
-const {	joinVoiceChannel, entersState, VoiceConnectionStatus, createAudioPlayer, createAudioResource, AudioPlayerStatus } = require('@discordjs/voice');
+const {	joinVoiceChannel, entersState, VoiceConnectionStatus, createAudioPlayer, createAudioResource, AudioPlayerStatus, getVoiceConnection } = require('@discordjs/voice');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const { markAsPlayed } = require('../analytics');
-const { audioFolder } = require('../config.json');
+const { audioFolder, timeoutMilliseconds } = require('../config.json');
 
 const player = createAudioPlayer();
+let leaveTimeouts = {};
 
 module.exports.getPagedList = function getPagedList(prefix, elements) {
   let currentPage = null;
@@ -31,6 +32,7 @@ module.exports.playClip = async function playClip(voice, clip, volume = 1, doMar
   if (voice && voice.channel) {
     const connection = await connectToChannel(voice.channel);
     const audioSource = createAudioResource(`${audioFolder + clip}.mp3`, {inlineVolume: true});
+    resetTimeout(connection, voice.guildId);
     audioSource.volume.setVolume(volume);
     player.play(audioSource);
     await entersState(player, AudioPlayerStatus.Playing, 5e3);
@@ -82,5 +84,20 @@ module.exports.sendButtonRows = async function sendButtonRows(clipNames, prefixT
   for (let i = 0; i < rows.length; i += 5) {
     const rowsToBeSent = rows.slice(i, Math.min(i + 5, rows.length));
     await interaction.followUp({content: `Clips (${(i + 1)}):`, components: rowsToBeSent});
+  }
+}
+
+function resetTimeout(connection, guildId) {
+  if (guildId in leaveTimeouts) {
+    clearTimeout(leaveTimeouts[guildId]);
+  }
+
+  leaveTimeouts[guildId] = setTimeout(() => connection.disconnect(), timeoutMilliseconds);
+}
+
+module.exports.leave = function(guildId) {
+  const connection = getVoiceConnection(guildId);
+  if (connection) {
+    connection.disconnect();
   }
 }

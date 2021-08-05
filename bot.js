@@ -17,6 +17,7 @@ const { RecentCommandHandler } = require("./handlers/command/recent_command_hand
 const { FrequentCommandHandler } = require("./handlers/command/frequent_command_handler");
 const { initializeAndRunIntros, memberJoined } = require("./lib/intros");
 const { SetIntroCommandHandler } = require("./handlers/command/set_intro_command_handle");
+const { LeaveCommandHandler } = require("./handlers/command/leave_command_handler");
 
 let commandHandlers;
 
@@ -81,7 +82,8 @@ function populateAndHandleCommands(commands) {
     new RandomCommandHandler(),
     new RecentCommandHandler(),
     new FrequentCommandHandler(),
-    new SetIntroCommandHandler()
+    new SetIntroCommandHandler(),
+    new LeaveCommandHandler()
   ];
 
   commandHandlers = {};
