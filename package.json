@@ -11,9 +11,9 @@
   "author": "helviti",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/opus": "^0.1.0",
+    "@discordjs/opus": "^0.5.3",
     "@discordjs/voice": "^0.5.5",
-    "discord.js": "^13.0.0-dev.4886ae2.1627171445",
+    "discord.js": "^13.0.0",
     "esm": "^3.2.25",
     "ffmpeg": "0.0.4",
     "ffmpeg-static": "^4.4.0",
