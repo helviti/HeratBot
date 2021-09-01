@@ -6,7 +6,7 @@ const { HelpCommandHandler } = require("./handlers/command/help_command_handler"
 const { ClipsCommandHandler } = require("./handlers/command/clips_command_handler");
 const { handleGuildMessage } = require("./handlers/message/guild_message_handler");
 const { TagsCommandHandler } = require("./handlers/command/tags_command_handler");
-const { TagCommandHandler } = require("./handlers/command/tag_command_handle");
+const { TagCommandHandler } = require("./handlers/command/tag_command_handler");
 const { handleButtonInteraction } = require("./handlers/button/button_handler");
 const { SearchCommandHandler } = require("./handlers/command/search_command_handler");
 const { AddTagCommandHandler } = require("./handlers/command/addtag_command_handler");
@@ -16,8 +16,9 @@ const { RandomCommandHandler } = require("./handlers/command/random_command_hand
 const { RecentCommandHandler } = require("./handlers/command/recent_command_handler");
 const { FrequentCommandHandler } = require("./handlers/command/frequent_command_handler");
 const { initializeAndRunIntros, memberJoined } = require("./lib/intros");
-const { SetIntroCommandHandler } = require("./handlers/command/set_intro_command_handle");
+const { SetIntroCommandHandler } = require("./handlers/command/set_intro_command_handler");
 const { LeaveCommandHandler } = require("./handlers/command/leave_command_handler");
+const { Watch2GetherCommandHandler } = require("./handlers/command/watch2gether_command_handler");
 
 let commandHandlers;
 
@@ -83,7 +84,8 @@ function populateAndHandleCommands(commands) {
     new RecentCommandHandler(),
     new FrequentCommandHandler(),
     new SetIntroCommandHandler(),
-    new LeaveCommandHandler()
+    new LeaveCommandHandler(),
+    new Watch2GetherCommandHandler()
   ];
 
   commandHandlers = {};
