@@ -80,10 +80,15 @@ module.exports.sendButtonRows = async function sendButtonRows(clipNames, prefixT
     }
   }
   
-  await interaction.reply(prefixText);
   for (let i = 0; i < rows.length; i += 5) {
     const rowsToBeSent = rows.slice(i, Math.min(i + 5, rows.length));
-    await interaction.followUp({content: `Clips (${(i + 1)}):`, components: rowsToBeSent});
+    let message = {content: `${prefixText} (${(i + 1)}):`, components: rowsToBeSent};
+    if (i == 0) {
+      await interaction.reply(message);
+    }
+    else {
+      await interaction.followUp(message);
+    }
   }
 }
 
