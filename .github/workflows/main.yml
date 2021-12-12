@@ -12,7 +12,9 @@ jobs:
         uses: actions/checkout@v2
         
       - name: test
-        run: ls -la
+        run: |
+          ls -la
+          pwd
 
       - name: execute remote ssh
         uses: appleboy/ssh-action@master
