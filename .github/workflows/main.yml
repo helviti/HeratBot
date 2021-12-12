@@ -18,5 +18,5 @@ jobs:
           known_hosts: ${{ secrets.HOST }}
 
       - name: Deploy with rsync
-        run: rsync -avz /home/runner/work/HeratBot/HeratBot ${{ secrets.USERNAME }}@${{ secrets.HOST }}:${{ DEPLOY_DIR }}
+        run: rsync -avz /home/runner/work/HeratBot/HeratBot ${{ secrets.USERNAME }}@${{ secrets.HOST }}:${{ secrets.DEPLOY_DIR }}
   
