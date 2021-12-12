@@ -38,8 +38,9 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             pm2 stop HeratBot
-            mv ~/HeratBot/* ~/HeratBot_old/*
-            mv ~/HeratBot_new/* ~/HeratBot/*
+            rm -rf ~/HeratBot
+            cp -r ~/HeratBot_new ~/HeratBot
+            rm -rf ~/HeratBot_new
             cd ~/HeratBot
             npm install --only=prod
             pm2 start HeratBot
