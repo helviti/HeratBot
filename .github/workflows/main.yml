@@ -7,7 +7,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout master branch
+      - name: Checkout master branch
         uses: actions/checkout@v2
         
       - name: Install SSH Key
@@ -16,13 +16,13 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }} 
           known_hosts: ${{ secrets.SSH_HOST }}
           
-      - name: Adding Known Hosts
+      - name: Add to known hosts
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
         
-      - name: Deploy with scp
+      - name: Deploy to host with scp
         run: scp -r /home/runner/work/HeratBot/HeratBot ${{ secrets.USERNAME }}@${{ secrets.SSH_HOST }}:/home/pi/HeratBot_new
     
-      - name: Stop server, move files and run the server
+      - name: Stop the server, move files around, install dependencies and run the server again
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
