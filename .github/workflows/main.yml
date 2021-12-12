@@ -11,19 +11,12 @@ jobs:
       - name: checkout master branch
         uses: actions/checkout@v2
         
-      - name: test
-        run: |
-          ls -la
-          pwd
-
-      - name: execute remote ssh
-        uses: appleboy/ssh-action@master
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
-          script: |
-            pm2 stop HeratBot
-            pm2 start HeratBot
+          key: ${{ secrets.SSH_PRIVATE_KEY }} 
+          known_hosts: ${{ secrets.HOST }}
+
+      - name: Deploy with rsync
+        run: rsync -avz /home/runner/work/HeratBot/HeratBot ${{ secrets.USERNAME }}@${{ secrets.HOST }}:${{ DEPLOY_DIR }}
   
