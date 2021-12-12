@@ -20,7 +20,7 @@ jobs:
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
         
       - name: Deploy with scp
-        run: scp -r $GITHUB_WORKSPACE ${{ secrets.USERNAME }}@${{ secrets.SSH_HOST }}:/home/pi/HeratBot_new
+        run: scp -r /home/runner/work/HeratBot/HeratBot ${{ secrets.USERNAME }}@${{ secrets.SSH_HOST }}:/home/pi/HeratBot_new
     
       - name: Stop server, move files and run the server
         uses: appleboy/ssh-action@master
@@ -29,5 +29,11 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
-          script: touch ~/hey.txt
+          script: |
+                pm2 stop HeratBot
+                mv ~/HeratBot/ ~/HeratBot_old/
+                mv ~/HeratBot_new/ ~/HeratBot/
+                cd ~/HeratBot
+                npm install --only=prod
+                pm2 start HeratBot
           
