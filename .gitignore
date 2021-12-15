@@ -111,3 +111,6 @@ ffmpeg.exe
 /audio
 /audio/*
 runner.sh
+
+# loot json
+savedLoot.json

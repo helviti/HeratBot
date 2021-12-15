@@ -1,8 +1,10 @@
 {
-    "botChannelId": "432453383270563850",
-    "audioFolder": "./audio/",
-    "dataFile": "./data.json",
-    "timeFormat": "YY/MM/DD-HH:mm:ss",
-    "introsFile": "./audio/intros.json",
-    "timeoutMilliseconds": 600000
+  "botChannelId": "432453383270563850",
+  "botUserId": "822789283319644170",
+  "lootChannelId": "920762039469752420",
+  "audioFolder": "./audio/",
+  "dataFile": "./data.json",
+  "timeFormat": "YY/MM/DD-HH:mm:ss",
+  "introsFile": "./audio/intros.json",
+  "timeoutMilliseconds": 600000
 }

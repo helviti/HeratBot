@@ -1,4 +1,3 @@
-
 module.exports = function consoleLog() {
   console.clear();
   console.log(` _    _ ______ _____         _______ ____   ____ _______ 
