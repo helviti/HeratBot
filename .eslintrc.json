@@ -1,23 +1,27 @@
 {
-    "env": {
-        "es6": true,
-        "node": true
-    },
-    "extends": [
-        "airbnb-base"
-    ],
-    "globals": {
-        "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly"
-    },
-    "parserOptions": {
-        "ecmaVersion": 2018,
-        "sourceType": "module"
-    },
-    "rules": {
-        "no-console": "off",
-        "no-unused-vars": "off",
-        "no-plusplus": "off",
-        "max-classes-per-file": "off"
-    }
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "extends": ["airbnb-base"],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-console": "off",
+    "no-unused-vars": "off",
+    "no-plusplus": "off",
+    "max-classes-per-file": "off",
+    "quotes": "off",
+    "linebreak-style": "off",
+    "no-use-before-define": "off",
+    "comma-dangle": "off",
+    "no-restricted-syntax": "off",
+    "implicit-arrow-linebreak": "off"
+  }
 }

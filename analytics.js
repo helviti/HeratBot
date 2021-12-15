@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
-const fs = require('fs');
-const { audioFolder } = require('./config.json');
-const { getTime } = require('./lib/util.js');
+const fs = require("fs");
+const { audioFolder } = require("./config.json");
+const { getTime } = require("./lib/util.js");
 
 class Clip {
   constructor(name, playCount = 0, lastPlayDate = null) {
@@ -12,7 +12,7 @@ class Clip {
 }
 
 class ClipMeta {
-  constructor(desc = '', tags = [], playCount = 0) {
+  constructor(desc = "", tags = [], playCount = 0) {
     this.desc = desc;
     this.tags = tags;
     this.playCount = playCount;
@@ -29,7 +29,9 @@ module.exports.clipList = clipList;
 module.exports.tagMap = tagMap;
 
 function fileNotExist(list, temp) {
-  if (list.length < 1) { return true; }
+  if (list.length < 1) {
+    return true;
+  }
   let flag = true;
   for (let i = 0; i < list.length; i += 1) {
     if (list[i].name === temp) {
@@ -49,19 +51,20 @@ function getMeta(clipName) {
   let meta = new ClipMeta();
   if (fs.existsSync(metaFile)) {
     let metaRaw = JSON.parse(fs.readFileSync(metaFile));
-    if ('desc' in metaRaw) meta.desc = metaRaw.desc;
-    if ('tags' in metaRaw) meta.tags = metaRaw.tags;
-    if ('playCount' in metaRaw) meta.playCount = metaRaw.playCount;
-    if ('lastPlayDate' in metaRaw) meta.lastPlayDate = Date.parse(metaRaw.lastPlayDate);
+    if ("desc" in metaRaw) meta.desc = metaRaw.desc;
+    if ("tags" in metaRaw) meta.tags = metaRaw.tags;
+    if ("playCount" in metaRaw) meta.playCount = metaRaw.playCount;
+    if ("lastPlayDate" in metaRaw)
+      meta.lastPlayDate = Date.parse(metaRaw.lastPlayDate);
   }
 
   return meta;
 }
 
-function saveMeta(clipName, meta) {  
+function saveMeta(clipName, meta) {
   const metaFile = getMetaFileName(clipName);
   fs.writeFileSync(metaFile, JSON.stringify(meta, null, 2), (err) => {
-    if(err) {
+    if (err) {
       console.log(err);
     }
   });
@@ -76,17 +79,17 @@ module.exports.generateClipObjects = function generateClipObjects() {
       if (clipList.length < 1 || fileNotExist(clipList, clipName)) {
         const meta = getMeta(clipName);
         clipList.push(new Clip(clipName, meta.playCount, meta.lastPlayDate));
-        const tags = meta.tags;
-        tags.forEach(tag => {
+        const { tags } = meta;
+        tags.forEach((tag) => {
           if (!(tag in tagMap)) {
             tagMap[tag] = [];
-          }        
+          }
           tagMap[tag].push(clipName);
         });
       }
     }
   });
-}
+};
 
 // Exports for the main file
 
@@ -96,7 +99,7 @@ module.exports.addClip = function addClip(name, by, meta, tags) {
     clipList.push(new Clip(name));
     saveMeta(name, meta);
   } else {
-    console.log('error adding clip');
+    console.log("error adding clip");
   }
 };
 
@@ -107,13 +110,13 @@ module.exports.clipPlayed = function clipPlayed(byId, clip) {
 module.exports.getList = function getList() {
   const audioList = [];
   clipList.forEach((item) => audioList.push(item.name));
-  const out = audioList.join(', ');
+  const out = audioList.join(", ");
   return out;
 };
 
 module.exports.getDescription = function getDescription(clipName) {
   return getMeta(clipName).desc;
-}
+};
 
 module.exports.setDescription = function setDescription(clipName, desc) {
   if (clipList.some((clip) => clip.name === clipName)) {
@@ -121,7 +124,7 @@ module.exports.setDescription = function setDescription(clipName, desc) {
     meta.desc = desc;
     saveMeta(clipName, meta);
   }
-}
+};
 
 function addTagToClip(clipName, tag) {
   if (clipList.some((clip) => clip.name === clipName)) {
@@ -130,7 +133,7 @@ function addTagToClip(clipName, tag) {
     if (!meta.tags.some((t) => t === tag)) {
       meta.tags.push(tag);
       saveMeta(clipName, meta);
-      if(!(tag in tagMap)) {
+      if (!(tag in tagMap)) {
         tagMap[tag] = [];
       }
       tagMap[tag].push(clipName);
@@ -142,16 +145,16 @@ module.exports.addTagToClip = addTagToClip;
 
 module.exports.getTags = function getTags(clipName) {
   return getMeta(clipName).tags;
-}
+};
 
 function removeTag(clipName, tag) {
   if (clipList.some((clip) => clip.name === clipName)) {
     tag = tag.toLowerCase();
     const meta = getMeta(clipName);
-    if (meta.tags.some(t => t === tag)) {
-      meta.tags = meta.tags.filter(value => value !== tag);
+    if (meta.tags.some((t) => t === tag)) {
+      meta.tags = meta.tags.filter((value) => value !== tag);
       saveMeta(clipName, meta);
-      tagMap[tag] = tagMap[tag].filter(value => value !== clipName);
+      tagMap[tag] = tagMap[tag].filter((value) => value !== clipName);
     }
   }
 }
@@ -161,16 +164,16 @@ module.exports.removeTag = removeTag;
 module.exports.renameTag = function renameTag(oldName, newName) {
   if (oldName in tagMap && !(newName in tagMap)) {
     const clips = tagMap[oldName];
-    clips.forEach(clip => {
+    clips.forEach((clip) => {
       removeTag(clip, oldName);
       addTagToClip(clip, newName);
     });
     delete tagMap[oldName];
   }
-}
+};
 
-module.exports.markAsPlayed = function(clipName) {
-  const clip = clipList.find(value => value.name === clipName);
+module.exports.markAsPlayed = function (clipName) {
+  const clip = clipList.find((value) => value.name === clipName);
   if (clip) {
     clip.playCount++;
     clip.lastPlayDate = new Date();
@@ -179,4 +182,4 @@ module.exports.markAsPlayed = function(clipName) {
     meta.lastPlayDate = clip.lastPlayDate;
     saveMeta(clipName, meta);
   }
-}
+};
