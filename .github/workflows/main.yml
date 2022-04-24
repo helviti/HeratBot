@@ -30,7 +30,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           source: "*"
-          target: "/home/pi/HeratBot_new"
+          target: "/home/pi/${{ github.event.repository.name }}_new"
 
       - name: Stop the server, move files around, install dependencies and run the server again
         uses: appleboy/ssh-action@master
@@ -40,10 +40,10 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            pm2 stop HeratBot
-            rm -rf ~/HeratBot
-            cp -r ~/HeratBot_new ~/HeratBot
-            rm -rf ~/HeratBot_new
-            cd ~/HeratBot
+            pm2 stop ${{ github.event.repository.name }}
+            rm -rf ~/${{ github.event.repository.name }}
+            cp -r ~/${{ github.event.repository.name }}_new ~/${{ github.event.repository.name }}
+            rm -rf ~/${{ github.event.repository.name }}_new
+            cd ~/${{ github.event.repository.name }}
             npm install --only=prod
-            pm2 start HeratBot
+            pm2 start ${{ github.event.repository.name }}
