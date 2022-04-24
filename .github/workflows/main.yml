@@ -30,7 +30,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           source: "*"
-          target: "/home/pi/${{ github.event.repository.name }}_new"
+          target: "~/${{ github.event.repository.name }}_new"
 
       - name: Stop the server, move files around, install dependencies and run the server again
         uses: appleboy/ssh-action@master
