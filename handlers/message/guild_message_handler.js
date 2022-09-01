@@ -7,7 +7,7 @@ module.exports.handleGuildMessage = async function handleGuildMessage(msg) {
   // Play clip if message matches a file
   if (match) {
     const { name, volume } = match.groups;
-    if (clipList.includes(name)) {
+    if (clipList.some((clip) => clip.name === name)) {
       deleteMessage(msg);
       if (volume) {
         await playClip(msg.member.voice, name, volume);
