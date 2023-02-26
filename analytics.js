@@ -46,6 +46,10 @@ function getMetaFileName(clipName) {
   return `${audioFolder}${clipName}.json`;
 }
 
+function getClipFileName(clipName) {
+  return `${audioFolder}${clipName}.mp3`;
+}
+
 function getMeta(clipName) {
   const metaFile = getMetaFileName(clipName);
   let meta = new ClipMeta();
@@ -70,7 +74,7 @@ function saveMeta(clipName, meta) {
   });
 }
 
-module.exports.generateClipObjects = function generateClipObjects() {
+function generateClipObjects() {
   fs.readdirSync(audioFolder).forEach((file) => {
     // Sanitize filenames
     const match = file.match(/(.+)\.[^\.]*/);
@@ -90,6 +94,8 @@ module.exports.generateClipObjects = function generateClipObjects() {
     }
   });
 };
+
+module.exports.generateClipObjects = generateClipObjects;
 
 // Exports for the main file
 
@@ -182,4 +188,14 @@ module.exports.markAsPlayed = function (clipName) {
     meta.lastPlayDate = clip.lastPlayDate;
     saveMeta(clipName, meta);
   }
+};
+
+module.exports.renameClip = function (clipName, newClipName) {
+  if (fileNotExist(clipList, clipName)) return false;
+  fs.renameSync(getMetaFileName(clipName), getMetaFileName(newClipName));
+  fs.renameSync(getClipFileName(clipName), getClipFileName(newClipName));
+  clipList = [];
+  tagMap = [];
+  generateClipObjects();
+  return true;
 };

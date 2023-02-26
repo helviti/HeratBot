@@ -48,6 +48,7 @@ const {
   Watch2GetherCommandHandler,
 } = require("./handlers/command/watch2gether_command_handler");
 const { startCron } = require("./lib/cron");
+const { RenameCommandHandler } = require("./handlers/command/rename_command_handler");
 
 let commandHandlers;
 
@@ -118,6 +119,7 @@ function populateAndHandleCommands(commands) {
     new SetIntroCommandHandler(),
     new LeaveCommandHandler(),
     new Watch2GetherCommandHandler(),
+    new RenameCommandHandler()
   ];
 
   commandHandlers = {};
