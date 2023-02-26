@@ -3,8 +3,8 @@ const { renameClip } = require("../../analytics");
 module.exports.RenameCommandHandler = class {
   constructor() {
     this.command = {
-      name: 'setintro',
-      description: 'Sets the intro for yourself',
+      name: 'rename',
+      description: 'Renames a clip',
       options: [
         {
           type: 'STRING',
