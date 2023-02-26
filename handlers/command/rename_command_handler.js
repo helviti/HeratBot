@@ -8,13 +8,13 @@ module.exports.RenameCommandHandler = class {
       options: [
         {
           type: 'STRING',
-          name: 'clipName',
+          name: 'clipname',
           description: 'Clip name',
           required: true
         },
         {
           type: 'STRING',
-          name: 'newClipName',
+          name: 'newclipname',
           description: 'The new clip name',
           required: true
         }
@@ -23,8 +23,8 @@ module.exports.RenameCommandHandler = class {
   }
 
   async handleCommand(interaction) {
-    const clipName = interaction.options.getString('clipName');
-    const newClipName = interaction.options.getString('newClipName');
+    const clipName = interaction.options.getString('clipname');
+    const newClipName = interaction.options.getString('newclipname');
     if (renameClip(clipName, newClipName)) {
       await interaction.reply("Renamed the clip successfully!")
     } else {
