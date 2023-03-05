@@ -1,3 +1,4 @@
+const { ApplicationCommandOptionType } = require("discord.js")
 const { tagMap } = require("../../analytics")
 const { getPagedList, multiReply, sendButtonRows } = require("../common")
 
@@ -8,7 +9,7 @@ module.exports.TagCommandHandler = class {
       description: 'Lists all clips with the specified tag',
       options: [
         {
-          type: 'STRING',
+          type: ApplicationCommandOptionType.String,
           name: 'tag',
           description: 'The tag to query for',
           required: true,

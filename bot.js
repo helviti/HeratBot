@@ -1,4 +1,4 @@
-const { Client, Intents } = require("discord.js");
+const { Client, GatewayIntentBits, ChannelType, Partials } = require("discord.js");
 const { generateClipObjects } = require("./analytics");
 const consWrite = require("./console.js");
 const { getTime } = require("./lib/util");
@@ -57,12 +57,13 @@ module.exports.startBot = function startBot(token) {
   initializeAndRunIntros();
   const client = new Client({
     intents: [
-      Intents.FLAGS.GUILDS,
-      Intents.FLAGS.GUILD_MESSAGES,
-      Intents.FLAGS.DIRECT_MESSAGES,
-      Intents.FLAGS.GUILD_VOICE_STATES,
+      GatewayIntentBits.Guilds,
+      GatewayIntentBits.GuildMessages,
+      GatewayIntentBits.DirectMessages,
+      GatewayIntentBits.GuildVoiceStates,
+      GatewayIntentBits.MessageContent
     ],
-    partials: ["CHANNEL"],
+    partials: [Partials.Channel],
   });
 
   consWrite();
@@ -80,8 +81,8 @@ module.exports.startBot = function startBot(token) {
   client.on("interactionCreate", handleInteraction);
 
   client.on("messageCreate", async (msg) => {
-    if (msg.channel.type === "DM") await handleDirectMessage(msg);
-    if (msg.channel.type === "GUILD_TEXT") await handleGuildMessage(msg);
+    if (msg.channel.type === ChannelType.DM) await handleDirectMessage(msg);
+    if (msg.channel.type === ChannelType.GuildText) await handleGuildMessage(msg);
   });
 
   process.on("unhandledRejection", (error) => {

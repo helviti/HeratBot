@@ -1,3 +1,4 @@
+const { ApplicationCommandOptionType } = require("discord.js")
 const { tagMap, clipList } = require("../../analytics")
 const { playClip } = require("../common")
 
@@ -8,7 +9,7 @@ module.exports.RandomCommandHandler = class {
       description: 'Play a random clip',
       options: [
         {
-          type: 'STRING',
+          type: ApplicationCommandOptionType.String,
           name: 'tag',
           description: 'The tag to randomize from',
           required: false,

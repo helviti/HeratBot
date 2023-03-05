@@ -1,3 +1,4 @@
+const { ApplicationCommandOptionType } = require("discord.js");
 const { addTagToClip } = require("../../analytics");
 
 module.exports.AddTagCommandHandler = class {
@@ -7,13 +8,13 @@ module.exports.AddTagCommandHandler = class {
       description: 'Adds the specified tag(s) to specified clip(s)',
       options: [
         {
-          type: 'STRING',
+          type: ApplicationCommandOptionType.String,
           name: 'tags',
           description: 'Tag(s) to add (comma separated)',
           required: true
         },
         {
-          type: 'STRING',
+          type: ApplicationCommandOptionType.String,
           name: 'clips',
           description: 'Clip(s) to add the tag(s) to (comma separated)',
           required: true

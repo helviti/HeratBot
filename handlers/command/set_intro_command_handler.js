@@ -1,3 +1,4 @@
+const { ApplicationCommandOptionType } = require("discord.js");
 const { tagMap } = require("../../analytics");
 const { setIntro } = require("../../lib/intros");
 const { getPagedList, multiReply, sendButtonRows } = require("../common")
@@ -9,13 +10,13 @@ module.exports.SetIntroCommandHandler = class {
       description: 'Sets the intro for yourself',
       options: [
         {
-          type: 'STRING',
+          type: ApplicationCommandOptionType.String,
           name: 'clip',
           description: 'Clip name',
           required: true
         },
         {
-          type: 'USER',
+          type: ApplicationCommandOptionType.User,
           name: 'user',
           description: 'The user',
           required: false

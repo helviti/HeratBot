@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { MessageEmbed } = require("discord.js");
+const { MessageEmbed, ApplicationCommandOptionType } = require("discord.js");
 
 module.exports.Watch2GetherCommandHandler = class {
   constructor() {
@@ -8,7 +8,7 @@ module.exports.Watch2GetherCommandHandler = class {
       description: 'Creates a watch2gether room',
       options: [
         {
-          type: 'STRING',
+          type: ApplicationCommandOptionType.String,
           name: 'video',
           description: 'Initial video',
           required: true

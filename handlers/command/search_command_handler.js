@@ -1,3 +1,4 @@
+const { ApplicationCommandOptionType } = require("discord.js");
 const { clipList } = require("../../analytics")
 const { sendButtonRows } = require("../common")
 
@@ -8,7 +9,7 @@ module.exports.SearchCommandHandler = class {
       description: 'Lists all clips starting with the specified key',
       options: [
         {
-          type: 'STRING',
+          type: ApplicationCommandOptionType.String,
           name: 'key',
           description: 'The key to query for',
           required: true

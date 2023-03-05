@@ -1,5 +1,5 @@
 const {	joinVoiceChannel, entersState, VoiceConnectionStatus, createAudioPlayer, createAudioResource, AudioPlayerStatus, getVoiceConnection } = require('@discordjs/voice');
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { ButtonStyle, ButtonBuilder, ActionRowBuilder } = require('discord.js');
 const { markAsPlayed } = require('../analytics');
 const { audioFolder, timeoutMilliseconds } = require('../config.json');
 
@@ -73,9 +73,9 @@ module.exports.sendButtonRows = async function sendButtonRows(clipNames, prefixT
   let buttons = [];
   for (let i = 0; i < clipNames.length; i++) {
     const name = clipNames[i];
-    buttons.push(new MessageButton().setStyle('PRIMARY').setLabel(name).setCustomId(`c_${name}`));
+    buttons.push(new ButtonBuilder().setStyle(ButtonStyle.Primary).setLabel(name).setCustomId(`c_${name}`));
     if (i % 5 == 4 || (i + 1) == clipNames.length) {
-      rows.push(new MessageActionRow().addComponents(buttons));
+      rows.push(new ActionRowBuilder().addComponents(buttons));
       buttons = [];
     }
   }

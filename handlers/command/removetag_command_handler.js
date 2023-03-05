@@ -1,3 +1,4 @@
+const { ApplicationCommandOptionType } = require("discord.js");
 const { removeTag } = require("../../analytics");
 
 module.exports.RemoveTagCommandHandler = class {
@@ -7,13 +8,13 @@ module.exports.RemoveTagCommandHandler = class {
       description: 'Removes specified tag(s) from specified clip(s)',
       options: [
         {
-          type: 'STRING',
+          type: ApplicationCommandOptionType.String,
           name: 'tags',
           description: 'Tag(s) to remove (comma separated)',
           required: true
         },
         {
-          type: 'STRING',
+          type: ApplicationCommandOptionType.String,
           name: 'clips',
           description: 'Clip(s) to remove the tag(s) from (comma separated)',
           required: true

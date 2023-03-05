@@ -1,3 +1,4 @@
+const { ApplicationCommandOptionType } = require("discord.js");
 const { renameClip } = require("../../analytics");
 
 module.exports.RenameCommandHandler = class {
@@ -7,13 +8,13 @@ module.exports.RenameCommandHandler = class {
       description: 'Renames a clip',
       options: [
         {
-          type: 'STRING',
+          type: ApplicationCommandOptionType.String,
           name: 'clipname',
           description: 'Clip name',
           required: true
         },
         {
-          type: 'STRING',
+          type: ApplicationCommandOptionType.String,
           name: 'newclipname',
           description: 'The new clip name',
           required: true
