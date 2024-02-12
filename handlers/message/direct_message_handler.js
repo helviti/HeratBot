@@ -3,15 +3,14 @@ const { downloadFile, getTime } = require("../../lib/util");
 
 module.exports.handleDirectMessage = async function handleDirectMessage(msg) {
   if (msg.attachments.first()) {
-    let name = msg.attachments.first().url;
+    const attachment = msg.attachments.first();
+    const name = attachment.name;
     if (name.substring(name.length - 3, name.length) === "mp3") {
-      name = name.split("/");
-      name = name[name.length - 1];
       const temp = name.slice(0, -4).toUpperCase();
+      console.log(temp);
       console.log(`${getTime()}: Downloading file: ${name}`);
 
-      // console.log(name);
-      await downloadFile(msg.attachments.first().url, temp);
+      await downloadFile(attachment.url, temp);
       console.log(`${getTime()}: Download finished.`);
 
       addClip(temp, msg.author.id, new ClipMeta(msg.content), []);
