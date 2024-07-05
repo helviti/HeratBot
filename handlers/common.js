@@ -35,7 +35,7 @@ module.exports.playClip = async function playClip(voice, clip, volume = 1, doMar
     resetTimeout(connection, voice.guildId);
     audioSource.volume.setVolume(volume);
     player.play(audioSource);
-    await entersState(player, AudioPlayerStatus.Playing, 5e3);
+    await entersState(player, AudioPlayerStatus.Playing, 5_000);
     connection.subscribe(player);
     if (doMarkPlayed) markAsPlayed(clip);
   }
@@ -48,10 +48,17 @@ async function connectToChannel(channel) {
 		adapterCreator: channel.guild.voiceAdapterCreator,
 	});
 	try {
-		await entersState(connection, VoiceConnectionStatus.Ready, 30_000);
+		await entersState(connection, VoiceConnectionStatus.Ready, 30_000);    
+    connection.on('stateChange', (old_state, new_state) => {
+      if (old_state.status === VoiceConnectionStatus.Ready && new_state.status === VoiceConnectionStatus.Connecting) {
+        connection.configureNetworking();
+      }
+    });
 		return connection;
 	} catch (error) {
-		connection.destroy();
+    if (connection.state.status != VoiceConnectionStatus.Destroyed) {
+		  connection.destroy();
+    }
 		throw error;
 	}
 }
@@ -97,12 +104,12 @@ function resetTimeout(connection, guildId) {
     clearTimeout(leaveTimeouts[guildId]);
   }
 
-  leaveTimeouts[guildId] = setTimeout(() => connection.disconnect(), timeoutMilliseconds);
+  leaveTimeouts[guildId] = setTimeout(() => connection.destroy(), timeoutMilliseconds);
 }
 
 module.exports.leave = function(guildId) {
   const connection = getVoiceConnection(guildId);
   if (connection) {
-    connection.disconnect();
+    connection.destroy();
   }
 }
